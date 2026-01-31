@@ -17,11 +17,14 @@ app.use('/api/auth', authRoutes);
 app.use('/api/posts', postRoutes);
 
 // Database Connection
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/social-app')
+mongoose.connect(process.env.MONGODB_URI)
     .then(() => {
         console.log('Connected to MongoDB');
-        app.listen(PORT, () => {
+        app.listen(PORT, '0.0.0.0', () => {
             console.log(`Server running on port ${PORT}`);
         });
     })
-    .catch((err) => console.error('Could not connect to MongoDB', err));
+    .catch((err) => {
+        console.error('Could not connect to MongoDB', err);
+        process.exit(1); // Exit if DB connection fails to trigger a restart
+    });
